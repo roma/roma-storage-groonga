@@ -73,13 +73,13 @@ module Roma
         end
 
         def open
-          @context = Groonga::Context.new(:encoding => :none)
+          @context = ::Groonga::Context.new(:encoding => :none)
           if File.exist?(@fname)
-            @database = Groonga::Database.new(@fname, :context => @context)
+            @database = ::Groonga::Database.new(@fname, :context => @context)
           else
-            @database = Groonga::Database.create(:context => @context,
+            @database = ::Groonga::Database.create(:context => @context,
                                                  :path => @fname)
-            Groonga::Schema.define(:context => @context) do |schema|
+            ::Groonga::Schema.define(:context => @context) do |schema|
               schema.create_table("hash",
                                   :type => :hash,
                                   :key_type => "ShortText") do |table|
