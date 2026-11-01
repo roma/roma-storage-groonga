@@ -1,39 +1,48 @@
-# Roma::Storage::Groonga
+# roma-storage-groonga
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/roma/storage/groonga`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A [Groonga](https://groonga.org/) storage for [ROMA](https://github.com/roma/roma), a distributed key-value store.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+This gem uses [rroonga](https://github.com/ranguba/rroonga), which needs Groonga 12.0.2 or later. Install Groonga first, for example:
+
+    $ brew install groonga                 # macOS
+    $ sudo apt-get install libgroonga-dev  # Ubuntu, from ppa:groonga/ppa
+
+Without Groonga, rroonga builds it from the source, which takes a while. See [the install guide of Groonga](https://groonga.org/docs/install.html) for other systems.
+
+Then add this line to the Gemfile of your ROMA server:
 
 ```ruby
 gem 'roma-storage-groonga'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+And then run `bundle install`. Or install it yourself:
 
     $ gem install roma-storage-groonga
 
 ## Usage
 
-TODO: Write usage instructions here
+In the config.rb of ROMA, require the storage and set it to `STORAGE_CLASS`:
+
+```ruby
+require 'roma/storage/groonga'
+
+module Roma
+  module Config
+    # ...
+    STORAGE_CLASS = Roma::Storage::GroongaStorage
+    # ...
+  end
+end
+```
+
+Each node keeps its data in `STORAGE_PATH/<node-id>/<hash-name>/`, divided into `STORAGE_DIVNUM` Groonga databases named `0.grn`, `1.grn` and so on. Groonga writes some more files next to each of them.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Run `bundle install`, then `bundle exec rake spec` to run the tests.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## License
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/satoryu/roma-storage-groonga. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-## Code of Conduct
-
-Everyone interacting in the Roma::Storage::Groonga project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/satoryu/roma-storage-groonga/blob/master/CODE_OF_CONDUCT.md).
+GPL-3.0. See LICENSE.txt.
