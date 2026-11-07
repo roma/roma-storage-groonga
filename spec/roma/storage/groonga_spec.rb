@@ -88,9 +88,14 @@ RSpec.describe Roma::Storage::GroongaStorage do
     st.closedb
   end
 
-  it "tells its class in the stats" do
+  it "tells the path and record count of each database" do
     st = open_storage
-    expect(st.get_stat['storage.st_class']).to eq('GroongaStorage')
+    st.set(0, 'k1', 0, NO_EXPIRY, 'v1')
+    stats = st.database_stats
+    # Groonga tells the path of the table, which is next to the database.
+    expect(stats.map { |s| File.basename(s['path']) }).to all(match(/\A[01]\.grn\./))
+    expect(stats.map { |s| File.dirname(s['path']) }.uniq).to eq([File.expand_path(dir)])
+    expect(stats.sum { |s| s['rnum'] }).to eq(1)
     st.closedb
   end
 end

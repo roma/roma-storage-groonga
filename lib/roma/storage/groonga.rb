@@ -12,13 +12,8 @@ module Roma
         @ext_name = 'grn'
       end
 
-      def get_stat
-        ret = super
-        @hdb.each_with_index do |hdb, i|
-          ret["storage[#{i}].path"] = File.expand_path(hdb.path)
-          ret["storage[#{i}].rnum"] = hdb.rnum
-        end
-        ret
+      def database_stats
+        @hdb.map { |hdb| { 'path' => File.expand_path(hdb.path), 'rnum' => hdb.rnum } }
       end
 
       private
